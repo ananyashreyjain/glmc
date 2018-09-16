@@ -34,6 +34,10 @@ typedef float vec4f[4];
 typedef float vec3f[3];
 typedef float vec2f[2];
 
+typedef vec4f mat4f[4];
+typedef vec3f mat3f[3];
+typedef vec2f mat2f[2];
+
 // vec3f
 
 void glmc_vec3f_from_2f(vec3f dest, vec2f src_a, float src_b);
