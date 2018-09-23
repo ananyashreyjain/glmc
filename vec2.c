@@ -6,7 +6,7 @@ void glmc_vec2f_from_3f(vec2f dest, vec3f src)
 {
 	int e3;
 	int e2 = 0;
-	for(int e3=0; e3<3; e3++)
+	for(int e3=0; e3<2; e3++)
 	{
 		if(src[e3]!=0 && e2<2)
 		{
