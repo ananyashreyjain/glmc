@@ -1,3 +1,5 @@
+//file underdevlopment
+
 #include "glmc.h"
 #include <stdio.h>
 
