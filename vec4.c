@@ -39,7 +39,6 @@ float glmc_vec4f_sqrlength(vec4f vec)
 	for(e4=0; e4<4; e4++)
 	{
 		sum+=vec[e4]*vec[e4];
-		printf("%f\n",vec[e4]);
 	}
 	return sum;
 
@@ -69,17 +68,15 @@ void glmc_vec4f_normlize(vec4f dest, vec4f src)
 	for(e4=0; e4<4; e4++)
 	{
 		dest[e4] = src[e4] / (glmc_vec4f_length(src));
-		printf("%f\n",dest[e4]);
 	}
 }
 
-void glmc_vec4f_add(vec4f dest, vec4f src_a, vec4f src_b) // dest = src_a + src_b;
+void glmc_vec4f_add(vec4f dest, vec4f src_a, vec4f src_b)
 {
 	int e4;
 	for(e4=0; e4<4; e4++)
 	{
 		dest[e4] = src_a[e4] + src_b[e4];
-		printf("%f\n",dest[e4]);
 	}
 }
 	
@@ -89,7 +86,6 @@ void glmc_vec4f_add_dest(vec4f src_dest, vec4f src_b)
 	for(e4=0; e4<4; e4++)
 	{
 		src_dest[e4] += src_b[e4];
-		printf("%f\n",src_dest[e4]);
 	}
 }
 
@@ -99,7 +95,6 @@ void glmc_vec4f_sub(vec4f dest, vec4f src_a, vec4f src_b)
 	for(e4=0; e4<4; e4++)
 	{
 		dest[e4] = src_a[e4] - src_b[e4];
-		printf("%f\n",dest[e4]);
 	}
 }
 
@@ -109,7 +104,6 @@ void glmc_vec4f_sub_dest(vec4f src_dest, vec4f src_b)
 	for(e4=0; e4<4; e4++)
 	{
 		src_dest[e4] -= src_b[e4];
-		printf("%f\n",src_dest[e4]);
 	}
 }
 
@@ -119,7 +113,6 @@ void glmc_vec4f_mul(vec4f dest, vec4f src_a, vec4f src_b)
 	for(e4=0; e4<4; e4++)
 	{
 		dest[e4] = src_a[e4] * src_b[e4];
-		printf("%f\n",dest[e4]);
 	}
 }
 
@@ -129,7 +122,6 @@ void glmc_vec4f_mul_dest(vec4f src_dest, vec4f src_b)
 	for(e4=0; e4<4; e4++)
 	{
 		src_dest[e4] *= src_b[e4];
-		printf("%f\n",src_dest[e4]);
 	}
 }
 
@@ -139,7 +131,6 @@ void glmc_vec4f_mul_s(vec4f dest, vec4f src_a, float src_b)
 	for(e4=0; e4<4; e4++)
 	{
 		dest[e4] = src_a[e4] * src_b;
-		printf("%f\n",dest[e4]);
 	}
 }
 
@@ -149,7 +140,6 @@ void glmc_vec4f_div(vec4f dest, vec4f src_a, vec4f src_b)
 	for(e4=0; e4<4; e4++)
 	{
 		dest[e4] = src_a[e4] / src_b[e4];
-		printf("%f\n",dest[e4]);
 	}
 }
 void glmc_vec4f_div_dest(vec4f src_dest, vec4f src_b)
@@ -158,7 +148,6 @@ void glmc_vec4f_div_dest(vec4f src_dest, vec4f src_b)
 	for(e4=0; e4<4; e4++)
 	{
 		src_dest[e4] /= src_b[e4];
-		printf("%f\n",src_dest[e4]);
 	}
 }
 
@@ -168,7 +157,6 @@ void glmc_vec4f_div_s(vec4f dest, vec4f src_a, float src_b)
 	for(e4=0; e4<4; e4++)
 	{
 		dest[e4] = src_a[e4] / src_b;
-		printf("%f\n",dest[e4]);
 	}
 }
 
@@ -178,7 +166,6 @@ void glmc_vec4f_addadd(vec4f dest, vec4f src_a, vec4f src_b)
 	for(e4=0; e4<4; e4++)
 	{
 		dest[e4] += src_a[e4] + src_b[e4];
-		printf("%f\n",dest[e4]);
 	}
 }
 
@@ -188,7 +175,6 @@ void glmc_vec4f_subadd(vec4f dest, vec4f src_a, vec4f src_b)
 	for(e4=0; e4<4; e4++)
 	{
 		dest[e4] += src_a[e4] - src_b[e4];
-		printf("%f\n",dest[e4]);
 	}
 }
 
@@ -198,7 +184,6 @@ void glmc_vec4f_madd(vec4f dest, vec4f src_a, vec4f src_b)
 	for(e4=0; e4<4; e4++)
 	{
 		dest[e4] += src_a[e4] * src_b[e4];
-		printf("%f\n",dest[e4]);
 	}
 }
 
@@ -208,7 +193,6 @@ void glmc_vec4f_msub(vec4f dest, vec4f src_a, vec4f src_b)
 	for(e4=0; e4<4; e4++)
 	{
 		dest[e4] -= src_a[e4] * src_b[e4];
-		printf("%f\n",dest[e4]);
 	}
 }
 

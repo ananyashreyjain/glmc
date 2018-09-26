@@ -40,6 +40,30 @@ void glmc_mat3f_copy(mat3f dest, mat3f src_b)
 	}
 }
 
+void glmc_mat3f_transp(mat3f dest, mat3f src_b)
+{
+	for(int x=0; x<3; x++)
+	{
+		for(int y=0; y<3; y++)
+		{
+			dest[y][x]=src_b[x][y];
+		}
+	}
+}
+
+float glmc_mat3f_abs(mat3f src_b)
+{
+	float dest=0;
+	for(int x=0; x<3; x++)
+	{
+		for(int y=0; y<3; y++)
+		{
+			dest+=src_b[x][y];
+		}
+	}
+	return dest;
+}
+
 void glmc_mat3f_add(mat3f dest, mat3f src_a, mat3f src_b)
 {
 	int x=0;
@@ -58,17 +82,6 @@ void glmc_mat3f_sub(mat3f dest, mat3f src_a, mat3f src_b)
 	}
 }
 
-void glmc_mat3f_transp(mat3f dest, mat3f src_b)
-{
-	for(int x=0; x<3; x++)
-	{
-		for(int y=0; y<3; y++)
-		{
-			dest[y][x]=src_b[x][y];
-		}
-	}
-}
-
 void glmc_mat3f_mul(mat3f dest, mat3f src_a, mat3f src_b)
 {
 	for(int x=0; x<3; x++)
@@ -81,20 +94,34 @@ void glmc_mat3f_mul(mat3f dest, mat3f src_a, mat3f src_b)
 			}
 		}
 	}
-	
 }
 
-float glmc_mat3f_abs(mat3f src_b)
+void glmc_mat3f_muladd(mat3f dest, mat3f src_a, mat3f src_b)
 {
-	float dest=0;
-	for(int x=0; x<3; x++)
-	{
-		for(int y=0; y<3; y++)
-		{
-			dest+=src_b[x][y];
-		}
-	}
-	return dest;
+	mat3f temp;
+	glmc_mat3f_mul(temp, src_a, src_b);
+	glmc_mat3f_add(dest, dest, temp);
+}
+
+void glmc_mat3f_mulsub(mat3f dest, mat3f src_a, mat3f src_b)
+{
+	mat3f temp;
+	glmc_mat3f_mul(temp, src_a, src_b);
+	glmc_mat3f_sub(dest, dest, temp);
+}
+
+void glmc_mat3f_mul_s(mat3f dest, mat3f src_a, float src_b)
+{
+	glmc_vec3f_mul_s(dest[0], src_a[0], src_b);
+	glmc_vec3f_mul_s(dest[1], src_a[1], src_b);
+	glmc_vec3f_mul_s(dest[2], src_a[2], src_b);
+}
+
+void glmc_mat3f_div_s(mat3f dest, mat3f src_a, float src_b)
+{
+	glmc_vec3f_div_s(dest[0], src_a[0], src_b);
+	glmc_vec3f_div_s(dest[1], src_a[1], src_b);
+	glmc_vec3f_div_s(dest[2], src_a[2], src_b);
 }
 
 void glmc_mat3f_inv(mat3f dest, mat3f src_a)// Inverse of a matrix by Gauss-Jordan elimination
@@ -139,13 +166,53 @@ void glmc_mat3f_inv(mat3f dest, mat3f src_a)// Inverse of a matrix by Gauss-Jord
 	src_a[1][2]=0;
 	if(glmc_mat3f_isequal(src_a, identity) == 0)
 	{
-		 printf("Warning:Matrix is not inversible");
+		 printf("Error:Matrix is not inversible");
 	}
 	glmc_mat3f_copy(src_a,temp_mat);
 }
 
-void glmc_mat3f_rotation(mat3f dest, float angleX, float angleY, float angleZ)
+void glmc_mat3f_rotation(mat3f dest, vec3f dir, float angle)
 {
-	mat3f rotation = {{cos(angleY)*cos(angleZ), cos(angleX)*cos(angleY)*cos(angleZ)-cos(angleX)*sin(angleZ),cos(angleX)*cos(angleZ)*sin(angleY)+sin(angleX)*sin(angleZ)},{cos(angleY)*sin(angleZ), cos(angleX)*cos(angleZ)+sin(angleX)*sin(angleY)*sin(angleZ),cos(angleX)*sin(angleY)*sin(angleZ)-cos(angleZ)*sin(angleX)}, {-1*sin(angleY), cos(angleY)*sin(angleX), cos(angleY)*cos(angleX)}};
-	glmc_mat3f_copy(dest, rotation);
+	mat3f identity = {{0, 0, 1}, {0, 1, 0}, {1, 0, 0}};
+	vec3f uv;
+	glmc_vec3f_normalize(uv,dir);
+	mat3f u = {{0, -1*uv[2], uv[1]}, 
+	{uv[2], 0, -1*uv[0]},
+	{-1*uv[1], uv[0], 0}};
+	mat3f uxu = {{uv[0]*uv[0], uv[0]*uv[1], uv[0]*uv[2]},
+	{uv[0]*uv[1], uv[1]*uv[1], uv[1]*uv[2]}, 
+	{uv[0]*uv[2], uv[1]*uv[2], uv[2]*uv[2]}};
+	glmc_mat3f_mul_s(identity, identity, cos(angle));
+	glmc_mat3f_mul_s(u, u, sin(angle));
+	glmc_mat3f_mul_s(uxu, uxu, (1-cos(angle)));
+	glmc_mat3f_add(dest, u, identity);
+	glmc_mat3f_add(dest, dest, uxu);
+	
 }
+void glmc_mat3f_normalize(mat3f dest)
+{
+	float det = glmc_mat3f_abs(dest);
+	glmc_vec3f_div_s(dest[0], dest[0] ,det);
+	glmc_vec3f_div_s(dest[1], dest[1] ,det);
+	glmc_vec3f_div_s(dest[2], dest[2] ,det);
+}
+
+void glmc_mat3f_vecmul(vec3f dest, mat3f src_a, vec3f src_b)
+{
+	dest[0]=glmc_vec3f_dot(src_a[0], src_b);
+	dest[1]=glmc_vec3f_dot(src_a[1], src_b);
+	dest[2]=glmc_vec3f_dot(src_a[2], src_b);
+}
+
+void glmc_mat3f_trans2D(mat3f dest, float X, float Y)
+{
+	mat3f temp={{1, 0, X}, {0, 1, Y}, {0, 0, 1}};
+	glmc_mat3f_copy(dest, temp);
+}
+
+void glmc_mat3f_scale2D(mat3f dest, float X, float Y)
+{
+	mat3f temp = {{X, 0, 0}, {Y, 0, 0}, {0, 0, 1}};
+	glmc_mat3f_copy(dest, temp);
+}
+
