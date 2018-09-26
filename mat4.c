@@ -110,26 +110,56 @@ void glmc_mat4f_mulsub(mat4f dest, mat4f src_a, mat4f src_b)
 	glmc_mat4f_sub(dest, dest, temp);
 }
 
-void glmc_mat4f_mul_s(mat4f dest, float src_b)
+void glmc_mat4f_mul_s(mat4f dest, mat4f src_a, float src_b)
 {
-	glmc_vec4f_mul_s(dest[0], dest[0], src_b);
-	glmc_vec4f_mul_s(dest[1], dest[1], src_b);
-	glmc_vec4f_mul_s(dest[2], dest[2], src_b);
-	glmc_vec4f_mul_s(dest[3], dest[3], src_b);
+	glmc_vec4f_mul_s(dest[0], src_a[0], src_b);
+	glmc_vec4f_mul_s(dest[1], src_a[1], src_b);
+	glmc_vec4f_mul_s(dest[2], src_a[2], src_b);
+	glmc_vec4f_mul_s(dest[3], src_a[3], src_b);
 }
 
-void glmc_mat4f_div_s(mat4f dest, float src_b)
+void glmc_mat4f_div_s(mat4f dest, mat4f src_a, float src_b)
 {
-	glmc_vec4f_div_s(dest[0], dest[0], src_b);
-	glmc_vec4f_div_s(dest[1], dest[1], src_b);
-	glmc_vec4f_div_s(dest[2], dest[2], src_b);
-	glmc_vec4f_div_s(dest[3], dest[3], src_b);
+	glmc_vec4f_div_s(dest[0], src_a[0], src_b);
+	glmc_vec4f_div_s(dest[1], src_a[1], src_b);
+	glmc_vec4f_div_s(dest[2], src_a[2], src_b);
+	glmc_vec4f_div_s(dest[3], src_a[3], src_b);
 }
 
 void glmc_mat4f_inv(mat4f dest, mat4f src_a);
 
-
-void glmc_mat4f_rotation(mat4f dest, float angleX, float angleY, float angleZ);
+void glmc_mat4f_rotation(mat4f dest, vec4f dir, float angle)
+{
+	mat3f identity = {{0, 0, 1}, {0, 1, 0}, {1, 0, 0}};
+	vec3f uv;
+	glmc_vec3f_normalize(uv,dir);
+	mat3f u = {{0, -1*uv[2], uv[1]}, 
+	{uv[2], 0, -1*uv[0]},
+	{-1*uv[1], uv[0], 0}};
+	mat3f uxu = {{uv[0]*uv[0], uv[0]*uv[1], uv[0]*uv[2]},
+	{uv[0]*uv[1], uv[1]*uv[1], uv[1]*uv[2]}, 
+	{uv[0]*uv[2], uv[1]*uv[2], uv[2]*uv[2]}};
+	glmc_mat3f_mul_s(identity, identity, cos(angle));
+	glmc_mat3f_mul_s(u, u, sin(angle));
+	glmc_mat3f_mul_s(uxu, uxu, (1-cos(angle)));
+	glmc_mat3f_add(u, u, identity);
+	glmc_mat3f_add(uxu, uxu, u);
+	for(int x=0; x<4; x++)
+	{
+		for(int y=0; y<4; y++)
+		{
+			if(y<3 && x<3)
+			{
+				dest[x][y]=uxu[x][y];
+			}
+			else if(y==3 || x==3)
+			{
+				dest[x][y]==0;
+			}
+		}
+	}
+	dest[3][3]=1;
+}
 
 void glmc_mat4f_normalize(mat4f dest)
 {

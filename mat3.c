@@ -189,6 +189,7 @@ void glmc_mat3f_rotation(mat3f dest, vec3f dir, float angle)
 	glmc_mat3f_add(dest, dest, uxu);
 	
 }
+
 void glmc_mat3f_normalize(mat3f dest)
 {
 	float det = glmc_mat3f_abs(dest);
